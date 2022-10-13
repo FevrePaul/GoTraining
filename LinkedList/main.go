@@ -10,28 +10,35 @@ type LinkedList struct {
 }
 
 func ( l * LinkedList ) Insert( v interface{} ) {
-    sent := l
-    for sent.next != nil {
-        sent = sent.next
+    for l.next != nil {
+        l = l.next
     }
-    sent.next = &LinkedList{ val: v, next: nil }
+    l.next = &LinkedList{ val: v, next: nil }
 }
 
-func ( l * LinkedList ) Erase( v interface{} ) bool {
+func ( l * LinkedList ) Erase( v interface{} ) *LinkedList {
+    if l.val == v {
+        newHead := l.next
+        return newHead 
+    }
     sent := l
     for sent.next != nil {
+        if sent.next.val == v {
+            sent.next = sent.next.next
+            return l
+        }
         sent = sent.next
     }
+    return l
 }
 
 func ( l * LinkedList ) String() string {
     str := "LinkedList: "
-    sent := l
-    for sent.next != nil {
-        str += fmt.Sprint( sent.val ) + " -> "
-        sent = sent.next
+    for l.next != nil {
+        str += fmt.Sprint( l.val ) + " -> "
+        l = l.next
     }
-    str += fmt.Sprint( sent.val )
+    str += fmt.Sprint( l.val )
     return str
 }
 
@@ -45,5 +52,9 @@ func main() {
     l.Insert( 15 )
     l.Insert( 6 )
     l.Insert( 56 )
+    fmt.Println( l )
+    l = l.Erase( 5 )
+    l = l.Erase( 14 )
+    l = l.Erase( 12 )
     fmt.Println( l )
 }
